@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>>Trump Executive Order Generator 2.0</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.min.js"></script>
+    <script src="lib/rollups/aes.js"></script>
+    <script src="lib/clipboard.js-master/dist/clipboard.min.js"></script>
+    <style>
+        .eo {
+            transform: skewY(7deg) skewX(0deg) rotateY(3deg) rotateX(3deg) rotateZ(0.6deg);
+            position: absolute;
+            left: 380px;
+            top: 290px;
+            width: 215px;
+            height: 240px;
+            text-shadow: 0 0 1px black;
+            color: transparent;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body onload="decrypt()" style='perspective: 400px'>
+<h4>FROM URL:</h4>
+<h3 id="fromUrl"></h3>
+<input id="input" type="text" onkeyup="keyUp()">
+<h3>YOUR URL:</h3>
+<h4 id="cro"></h4>
+<h3>secret key: test</h3>
+
+<div style='margin: 50px; position: absolute; left: 0; top: 0; z-index: 50'>
+    <img src='index.jpg'/>
+    <div class='eo' id='eo' contenteditable onkeypress='keypress(event);' style='font-size: 17px;' spellcheck='false'>
+        Click me. Edit me. Make me horrifying.
+        <br/><br/>
+        Type '&lt;' and '&gt;' to change the text size.
+        <br/><br/>
+        Then tweet a screenshot.
+    </div>
+    <button class="btn" data-clipboard-target="#foo">
+        <img src="assets/clippy.svg" alt="Copy to clipboard">
+    </button>
+
+<script>
+    function decrypt() {
+        var url = window.location.href;
+        var myCounter = 0;
+        for(var a in url) {
+            if (a == '?') {
+                break;
+            }
+            myCounter++;
+        }
+        console.log(url.substring(46, url.length));
+        var decrypted = CryptoJS.AES.decrypt(url.substring(46, url.length), "test");
+        document.getElementById("fromUrl").innerHTML = decrypted.toString(CryptoJS.enc.Utf8);
+    }
+    
+    function encrypt(value) {
+        var encrypted = CryptoJS.AES.encrypt(value, "test");
+        document.getElementById("cro").innerHTML = encrypted;
+    }
+    
+    function keyUp() {
+        var input = document.getElementById("input").value;
+        encrypt(input)
+    }
+</script>
+</body>
+</html>
