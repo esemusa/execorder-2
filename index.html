@@ -51,14 +51,17 @@
     function encrypt(value) {
         var encrypted = CryptoJS.AES.encrypt(value, "test");
         //console.log(encrypted);
-        document.getElementById("myInput").value = window.location.href +'?'+encrypted;
+        var url = window.location.href;
+        if (url.indexOf('?') > -1) {
+            url = url.substring(0, url.indexOf('?'));
+        }
+        document.getElementById("myInput").value = url +'?'+encrypted;
     }
 
 
     function keyUp(e) {
         var eo = document.getElementById('eo');
         var input = eo.innerHTML;
-        //console.log(input);
         encrypt(input);
         var key = e.keyCode;
         if (key != 60 && key != 62) return;
