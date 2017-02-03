@@ -20,51 +20,54 @@
         }
     </style>
 </head>
-<body onload="decrypt()" style='perspective: 400px'>
-<h4>FROM URL:</h4>
-<h3 id="fromUrl"></h3>
-<input id="input" type="text" onkeyup="keyUp()">
-<h3>YOUR URL:</h3>
-<h4 id="cro"></h4>
-<h3>secret key: test</h3>
+<body onload="decrypt()" style='perspective: 400px;'>
 
-<div style='margin: 50px; position: absolute; left: 0; top: 0; z-index: 50'>
+<div style='margin: 30px; position: absolute; left: 0; top: 0px; z-index: 50;'>
     <img src='index.jpg'/>
-    <div class='eo' id='eo' contenteditable onkeypress='keypress(event);' style='font-size: 17px;' spellcheck='false'>
+    <div class='eo' id='eo' contenteditable onkeyup='keyUp(event);' style='font-size: 17px;' spellcheck='false'>
         Click me. Edit me. Make me horrifying.
-        <br/><br/>
+
+
         Type '&lt;' and '&gt;' to change the text size.
-        <br/><br/>
-        Then tweet a screenshot.
     </div>
-    <button class="btn" data-clipboard-target="#foo">
-        <img src="assets/clippy.svg" alt="Copy to clipboard">
-    </button>
+</div>
+<div style="position: absolute; top: 830px; margin: 30px">
+    <label for="myInput">Share-Link:</label>
+    <input id="myInput" type="text" style="width: 570px">
+</div>
+
+
 
 <script>
     function decrypt() {
         var url = window.location.href;
-        var myCounter = 0;
-        for(var a in url) {
-            if (a == '?') {
-                break;
-            }
-            myCounter++;
+        console.log(url.substring(url.indexOf('?')+1, url.length));
+        var decrypted = CryptoJS.AES.decrypt(url.substring(url.indexOf('?')+1, url.length), "test");
+        if (decrypted != "") {
+            document.getElementById("eo").innerHTML = decrypted.toString(CryptoJS.enc.Utf8);
         }
-        console.log(url.substring(46, url.length));
-        var decrypted = CryptoJS.AES.decrypt(url.substring(46, url.length), "test");
-        document.getElementById("fromUrl").innerHTML = decrypted.toString(CryptoJS.enc.Utf8);
     }
-    
+
     function encrypt(value) {
         var encrypted = CryptoJS.AES.encrypt(value, "test");
-        document.getElementById("cro").innerHTML = encrypted;
+        //console.log(encrypted);
+        document.getElementById("myInput").value = window.location.href +'?'+encrypted;
     }
-    
-    function keyUp() {
-        var input = document.getElementById("input").value;
-        encrypt(input)
+
+
+    function keyUp(e) {
+        var eo = document.getElementById('eo');
+        var input = eo.innerHTML;
+        //console.log(input);
+        encrypt(input);
+        var key = e.keyCode;
+        if (key != 60 && key != 62) return;
+        var adj = (key == 60) ? -1 : +1;
+        var size = parseInt(eo.style['font-size']);
+        eo.style['font-size'] = (size + adj) + 'px';
+        e.preventDefault();
     }
+
 </script>
 </body>
 </html>
