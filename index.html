@@ -64,7 +64,7 @@
         var input = eo.innerHTML;
         encrypt(input);
         var key = e.keyCode;
-        if (key != 60 && key != 62) {
+        if (key == 60 && key == 62) {
             var adj = (key == 60) ? -1 : +1;
             var size = parseInt(eo.style['font-size']);
             eo.style['font-size'] = (size + adj) + 'px';
