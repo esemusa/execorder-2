@@ -6,6 +6,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.min.js"></script>
     <script src="lib/rollups/aes.js"></script>
     <script src="lib/clipboard.js-master/dist/clipboard.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <style>
         .eo {
             transform: skewY(7deg) skewX(0deg) rotateY(3deg) rotateX(3deg) rotateZ(0.6deg);
@@ -21,8 +22,7 @@
     </style>
 </head>
 <body onload="decrypt()" style='perspective: 400px;'>
-
-<div style='margin: 30px; position: absolute; left: 0; top: 0px; z-index: 50;'>
+<div id="container" style='margin: 30px; position: absolute; left: 0; top: 0px; z-index: 50;'>
     <img src='index.jpg'/>
     <div class='eo' id='eo' contenteditable onkeypress="keyDown(event)" onkeyup='keyUp(event);' style='font-size: 17px;' spellcheck='false'>
         Click me. Edit me. Make me horrifying.
@@ -30,16 +30,21 @@
 
         Type '&lt;' and '&gt;' to change the text size.
     </div>
+
 </div>
 <div style="position: absolute; top: 830px; margin: 30px">
     <label for="myInput">Share-Link:</label>
-    <input id="myInput" type="text" style="width: 570px">
+    <input id="myInput" type="text" style="width: 530px; height: 30px">
+    <button class="btn" data-clipboard-target="#myInput">
+       <span class="glyphicon glyphicon-copy"></span>
+    </button>
 </div>
 
 
 
 <script>
     function decrypt() {
+        new Clipboard('.btn');
         var url = window.location.href;
         console.log(url.substring(url.indexOf('?')+1, url.length));
         var decrypted = CryptoJS.AES.decrypt(url.substring(url.indexOf('?')+1, url.length), "test");
@@ -75,8 +80,8 @@
             var adj = (key == 60) ? -1 : +1;
             var size = parseInt(eo.style['font-size']);
             eo.style['font-size'] = (size + adj) + 'px';
+            e.preventDefault();
         }
-        e.preventDefault();
     }
 
 </script>
